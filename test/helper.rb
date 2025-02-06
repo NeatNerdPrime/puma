@@ -33,7 +33,6 @@ require_relative "helpers/apps"
 Thread.abort_on_exception = true
 
 $debugging_info = []
-$debugging_hold = false   # needed for TestCLI#test_control_clustered
 
 require "puma"
 require "puma/detect"
@@ -224,8 +223,7 @@ class Minitest::Test
 end
 
 Minitest.after_run do
-  # needed for TestCLI#test_control_clustered
-  if !$debugging_hold && ENV['PUMA_TEST_DEBUG']
+  if ENV['PUMA_TEST_DEBUG']
     $debugging_info.sort!
     out = $debugging_info.join.strip
     unless out.empty?

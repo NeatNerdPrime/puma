@@ -31,7 +31,7 @@ class TestPumaServerSSL < PumaTest
   include TestPuma::PumaSocket
 
   PROTOCOL_USE_MIN_MAX =
-    OpenSSL::SSL::SSLContext.private_instance_methods(false).include?(:set_minmax_proto_version)
+    OpenSSL::SSL::SSLContext.public_instance_methods(false).include?(:min_version=)
 
   OPENSSL_3 = OpenSSL::OPENSSL_LIBRARY_VERSION.match?(/OpenSSL 3\.\d\.\d/)
 
@@ -152,7 +152,7 @@ class TestPumaServerSSL < PumaTest
   end
 
   def test_ssl_v3_rejection
-    skip-("SSLv3 protocol is unavailable") if Puma::MiniSSL::OPENSSL_NO_SSL3
+    skip("SSLv3 protocol is unavailable") if Puma::MiniSSL::OPENSSL_NO_SSL3
 
     rejection nil, nil, :SSLv3
   end
